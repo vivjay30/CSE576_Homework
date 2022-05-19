@@ -4,12 +4,15 @@ def draw_corners():
     im = load_image("data/Rainier1.png")
     detect_and_draw_corners(im, 2, 50, 3)
     save_image(im, "output/corners")
+    print("Done with corners")
 
 def draw_matches():
     a = load_image("data/Rainier1.png")
     b = load_image("data/Rainier2.png")
     m = find_and_draw_matches(a, b, 2, 50, 3)
     save_image(m, "output/matches")
+    print("Done with matches")
+
 
 def easy_panorama():
     im1 = load_image("data/Rainier1.png")
@@ -47,6 +50,7 @@ def field_panorama():
     im8 = load_image("data/field8.jpg")
 
     im1 = cylindrical_project(im1, 1200)
+    save_image(im1, "output/cylindrical_projection")
     im2 = cylindrical_project(im2, 1200)
     im3 = cylindrical_project(im3, 1200)
     im4 = cylindrical_project(im4, 1200)
@@ -54,22 +58,27 @@ def field_panorama():
     im6 = cylindrical_project(im6, 1200)
     im7 = cylindrical_project(im7, 1200)
     im8 = cylindrical_project(im8, 1200)
-    save_image(im1, "output/cylindrical_projection")
+    
 
     pan = panorama_image(im5, im6, thresh=2, iters=50000, inlier_thresh=3)
     save_image(pan, "output/field_panorama_1")
+    print("Done with pano 1")
     pan2 = panorama_image(pan, im7, thresh=2, iters=50000, inlier_thresh=3)
     save_image(pan2, "output/field_panorama_2")
+    print("Done with pano 2")
     pan3 = panorama_image(pan2, im8, thresh=2, iters=50000, inlier_thresh=3)
     save_image(pan3, "output/field_panorama_3")
+    print("Done with pano 3")
     pan4 = panorama_image(pan3, im4, thresh=2, iters=50000, inlier_thresh=3)
     save_image(pan4, "output/field_panorama_4")
+    print("Done with pano 4")
     pan5 = panorama_image(pan4, im3, thresh=2, iters=50000, inlier_thresh=3)
     save_image(pan5, "output/field_panorama_5")
+    print("Done with pano 5")
 
 os.makedirs('output', exist_ok=True)
-draw_corners()
-draw_matches()
-easy_panorama()
-rainier_panorama()
+# draw_corners()
+# draw_matches()
+# easy_panorama()
+# rainier_panorama()
 field_panorama()

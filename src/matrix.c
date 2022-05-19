@@ -84,14 +84,17 @@ matrix matrix_mult_matrix(matrix a, matrix b)
 {
     assert(a.cols == b.rows);
     int i, j, k;
+
     matrix p = make_matrix(a.rows, b.cols);
     for(i = 0; i < p.rows; ++i){
+
         for(j = 0; j < p.cols; ++j){
             for(k = 0; k < a.cols; ++k){
                 p.data[i][j] += a.data[i][k]*b.data[k][j];
             }
         }
     }
+
     return p;
 }
 
@@ -360,13 +363,31 @@ double *sle_solve(matrix A, double *b)
 
 matrix solve_system(matrix M, matrix b)
 {
+    // printf("Mat here 1\n");
     matrix none = {0};
+    // printf("Mat here 2\n");
+
     matrix Mt = transpose_matrix(M);
+    // printf("Mat here 3\n");
+
     matrix MtM = matrix_mult_matrix(Mt, M);
+    // printf("Mat here 4\n");
+
     matrix MtMinv = matrix_invert(MtM);
     if(!MtMinv.data) return none;
+    // printf("Mat here 5\n");
+
     matrix Mdag = matrix_mult_matrix(MtMinv, Mt);
+
+    // printf("Mat here 6\n");
+
+    // print_matrix(Mdag);
+    // print_matrix(b);
+    // printf("%i, %i, %i, %i\n", Mdag.rows, Mdag.cols, b.rows, b.cols);
     matrix a = matrix_mult_matrix(Mdag, b);
+
+    // printf("Mat here 7\n");
+
     free_matrix(Mt); free_matrix(MtM); free_matrix(MtMinv); free_matrix(Mdag);
     return a;
 }

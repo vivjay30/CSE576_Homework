@@ -64,7 +64,11 @@ int same_matrix(matrix m, matrix n)
     int i,j;
     for(i = 0; i < m.rows; ++i){
         for(j = 0; j < m.cols; ++j){
-            if(!within_eps(m.data[i][j], n.data[i][j], EPS)) return 0;
+            if(!within_eps(m.data[i][j], n.data[i][j], EPS)) {
+                printf("Expected %f got %f \n", m.data[i][j], n.data[i][j]);
+                return 0;
+            }
+
         }
     }
     return 1;
@@ -74,15 +78,18 @@ int same_image(image a, image b, float eps)
 {
     int i;
     if(a.w != b.w || a.h != b.h || a.c != b.c) {
-        //printf("Expected %d x %d x %d image, got %d x %d x %d\n", b.w, b.h, b.c, a.w, a.h, a.c);
+        printf("Expected %d x %d x %d image, got %d x %d x %d\n", b.w, b.h, b.c, a.w, a.h, a.c);
         return 0;
     }
     for(i = 0; i < a.w*a.h*a.c; ++i){
+        // if (i != 43 * 21 + 21) { continue; }
         float thresh = (fabs(b.data[i]) + fabs(a.data[i])) * eps / 2;
         if (thresh > eps) eps = thresh;
+        // printf("The value at %i should be %f, and it is %f! \n", i, b.data[i], a.data[i]);
+
         if(!within_eps(a.data[i], b.data[i], eps)) 
         {
-            printf("The value should be %f, but it is %f! \n", b.data[i], a.data[i]);
+            printf("The value at %i should be %f, but it is %f! \n", i, b.data[i], a.data[i]);
             return 0;
         }
     }
@@ -217,6 +224,7 @@ void test_nn_interpolate()
 {
     image im = load_image("data/dogsmall.jpg");
     TEST(within_eps(nn_interpolate(im, -.5, -.5, 0)  , 0.231373, EPS));
+
     TEST(within_eps(nn_interpolate(im, -.5, .5, 1)   , 0.239216, EPS));
     TEST(within_eps(nn_interpolate(im, .499, .5, 2)  , 0.207843, EPS));
     TEST(within_eps(nn_interpolate(im, 14.2, 15.9, 1), 0.690196, EPS));

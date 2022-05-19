@@ -93,6 +93,10 @@ shift_image = lib.shift_image
 shift_image.argtypes = [IMAGE, c_int, c_float]
 shift_image.restype = None
 
+scale_image = lib.scale_image
+scale_image.argtypes = [IMAGE, c_int, c_float]
+scale_image.restype = None
+
 load_image_lib = lib.load_image
 load_image_lib.argtypes = [c_char_p]
 load_image_lib.restype = IMAGE
@@ -212,7 +216,7 @@ panorama_image_lib = lib.panorama_image
 panorama_image_lib.argtypes = [IMAGE, IMAGE, c_float, c_float, c_int, c_float, c_int, c_int, c_int]
 panorama_image_lib.restype = IMAGE
 
-def panorama_image(a, b, sigma=2, thresh=5, nms=3, inlier_thresh=2, iters=10000, cutoff=30, draw=0):
+def panorama_image(a, b, sigma=2, thresh=5, nms=3, inlier_thresh=2, iters=50000, cutoff=30, draw=0):
     return panorama_image_lib(a, b, sigma, thresh, nms, inlier_thresh, iters, cutoff, draw)
 
 ##### HOMEWORK 4

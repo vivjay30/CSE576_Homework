@@ -168,7 +168,7 @@ image convolve_image(image im, image filter, int preserve)
       preserved. Check the detailed algorithm given in the README.  
     ************************************************************************/
     assert((filter.c == 1 || filter.c == im.c));
-    assert(filter.w == filter.h && filter.w % 2 == 1);  // Square and odd
+    assert(filter.h % 2 == 1 && filter.w % 2 == 1);  // Odd
 
     image new_image = make_image(im.w, im.h, im.c);
 
@@ -178,10 +178,12 @@ image convolve_image(image im, image filter, int preserve)
                 // Do the convolution sum
                 int filter_c = (filter.c == 1) ? 0 : c;
                 float conv_sum = 0.0;
-                int filter_offset = (int) filter.w / 2;
+                int filter_offset_w = (int) filter.w / 2;
+                int filter_offset_h = (int) filter.h / 2;
+
                 for (int x = 0; x < filter.w; ++x) {
                     for (int y = 0; y < filter.h; ++y) {
-                        conv_sum += get_pixel(filter, x, y, filter_c) * get_pixel(im, u - filter_offset + x, v - filter_offset + y, c);
+                        conv_sum += get_pixel(filter, x, y, filter_c) * get_pixel(im, u - filter_offset_w + x, v - filter_offset_h + y, c);
                     }
                 }
                 set_pixel(new_image, u, v, c, conv_sum);
@@ -275,7 +277,6 @@ image make_gaussian_filter(float sigma)
     ************************************************************************/
     const int center = ((int) 6 * sigma + 1) / 2;
     const double sigma_prec = (double) sigma;
-    // printf("Center %i\n", center);
     const int kernel_size = 2 * center + 1;
     image kernel = make_image(kernel_size, kernel_size, 1);
     for (int u = 0; u < kernel_size; ++u) {
